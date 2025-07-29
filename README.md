@@ -2,6 +2,12 @@
 
 ---
 
+## Sneak Peek
+
+![Screenshot 2025-07-29 120718](https://github.com/leavv-source/startpage-public/blob/1d64172463d4042a48448dd11b1cf38d982db053/Screenshot%202025-07-29%20120718.png)
+
+---
+
 ## Features
 
 * **Clean and Modern Design**: A sleek interface with a focus on usability, ensuring a pleasant visual experience.
@@ -9,14 +15,6 @@
 * **Quick Access Links**: Organized sections for **Entertainment**, **Proactive**, **Miscellaneous**, and **Utilities**, making your favorite sites easily accessible.
 * **Anime Episode Tracker**: Displays upcoming anime episodes for the Summer 2025 season (easily customizable for other seasons or shows).
 * **Beginner-Friendly**: Designed for easy installation and modification, even if you're new to HTML.
-
----
-
-## Sneak Peek
-
-Here's a sneak peek at what it looks like:
-
-![Screenshot 2025-07-29 120718](https://github.com/leavv-source/startpage-public/blob/1d64172463d4042a48448dd11b1cf38d982db053/Screenshot%202025-07-29%20120718.png)
 
 ---
 
