@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #303030; /* Fallback background color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #E5E7EB; /* Light, desaturated text color */
+            padding: 2rem 0; /* Added vertical padding here */
+            position: relative; /* Needed for pseudo-element positioning */
+            overflow-x: hidden; /* Prevent horizontal scroll due to blur */
+
+            /* Background Image Styling - Uses CSS variable updated by JS */
+            background-image: var(--dynamic-background-image);
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Keep background fixed when scrolling */
+        }
+
+        /* Pseudo-element for background blur - Uses CSS variable updated by JS */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: var(--dynamic-background-image);
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            filter: blur(8px); /* Apply blur effect */
+            z-index: -1; /* Place behind content */
+            transform: scale(1.02); /* Slightly scale to avoid blur edges */
+        }
+
+        .container {
+            background-color: rgba(38, 38, 38, 0.85); /* Container background with transparency */
+            border-radius: 1rem; /* Rounded corners for the main container */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Increased shadow for main container */
+            padding: 2.5rem; /* Increased padding */
+            max-width: 900px; /* Increased max-width */
+            width: 95%; /* Responsive width */
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            position: relative; /* Needed for absolute positioning of greeting */
+            z-index: 1; /* Ensure container is above blurred background */
+        }
+        .time-date {
+            font-size: 2.5rem; /* Larger font size for time */
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        .time-am-pm {
+            font-size: 1.25rem; /* Smaller font size for AM/PM */
+            font-weight: normal;
+            vertical-align: super; /* Super-script like alignment */
+            margin-left: 0.25rem;
+        }
+        .date {
+            font-size: 1.25rem; /* Larger font size for date */
+            font-weight: 400;
+            color: #D1D5DB; /* Desaturated date color */
+        }
+        .greeting-message {
+            position: absolute;
+            top: 2.5rem; /* Matches container padding-top */
+            right: 2.5rem; /* Matches container padding-right */
+            font-size: 1.125rem; /* Adjust as needed */
+            color: #D1D5DB; /* Desaturated text color */
+            text-align: right;
+            display: flex; /* Use flexbox for greeting and anime figure */
+            align-items: center; /* Align items vertically */
+            gap: 0.5rem; /* Space between greeting and figure */
+        }
+        .category-box {
+            background-color: #333333; /* Adjusted to a neutral dark gray */
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .category-title {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #D1D5DB;
+            margin-bottom: 0.75rem;
+        }
+        .link-item {
+            padding: 0.5rem 0;
+            color: #9CA3AF;
+            transition: color 0.2s ease-in-out;
+            cursor: pointer;
+            padding-left: 0.75rem; /* Added indentation */
+        }
+        .link-item:hover {
+            color: #E5E7EB;
+        }
+        .search-input {
+            background-color: #444444;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            color: #E5E7EB;
+            width: 100%;
+            font-size: 1rem;
+            outline: none;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .search-input::placeholder {
+            color: #6B7280;
+        }
+        .weather-section {
+            background-color: #333333;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            gap: 1rem;
+        }
+        .weather-location {
+            position: absolute;
+            top: 0.75rem;
+            left: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            color: #D1D5DB;
+        }
+        .weather-location svg {
+            width: 1rem;
+            height: 1rem;
+            fill: currentColor;
+        }
+        .weather-forecast-days {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-top: 1.5rem;
+        }
+        .weather-day {
+            text-align: center;
+            min-width: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .weather-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+        .weather-day-name {
+            font-weight: 500;
+            color: #D1D5DB;
+            margin-bottom: 0.25rem;
+        }
+        .weather-temp {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #E5E7EB;
+        }
+        .weather-rain {
+            font-size: 0.875rem;
+            color: #9CA3AF;
+        }
+
+        /* Anime Releases Section Styles */
+        .anime-releases-section {
+            background-color: #333333;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .anime-releases-title {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #D1D5DB;
+            margin-bottom: 0.5rem;
+        }
+        .anime-list-container {
+            display: flex;
+            overflow-x: auto; /* Enable horizontal scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            gap: 1rem; /* Space between anime cards */
+            padding-bottom: 0.5rem; /* Space for scrollbar */
+        }
+        .anime-list-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .anime-list-container::-webkit-scrollbar-track {
+            background: #444444;
+            border-radius: 10px;
+        }
+        .anime-list-container::-webkit-scrollbar-thumb {
+            background: #6B7280;
+            border-radius: 10px;
+        }
+        .anime-list-container::-webkit-scrollbar-thumb:hover {
+            background: #9CA3AF;
+        }
+        .anime-card {
+            flex-shrink: 0; /* Prevent cards from shrinking */
+            width: 130px; /* Adjusted width for each card */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer; /* Indicate clickable */
+        }
+        .anime-card img {
+            width: 110px; /* Adjusted width for covers */
+            height: 154px; /* Adjusted height for covers (maintaining aspect ratio) */
+            object-fit: cover;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Drop shadow for image */
+        }
+        .anime-card-title {
+            font-size: 0.875rem;
+            color: #E5E7EB;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Limit title to 2 lines */
+            -webkit-box-orient: vertical;
+            line-height: 1.2;
+            height: 2.4em; /* Max height for 2 lines */
+        }
+        .anime-details {
+            font-size: 0.75rem; /* Smaller font size for details */
+            color: #9CA3AF; /* Desaturated text color */
+            line-height: 1.1;
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 768px) {
+            .main-content {
+                height: 320px;
+            }
+            .categories-section {
+                height: 100%;
+            }
+            .category-grid {
+                height: 100%;
+                grid-template-rows: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 767px) {
+            .main-content {
+                flex-direction: column;
+                align-items: center;
+                height: auto;
+            }
+            .image-section {
+                margin-bottom: 1.5rem;
+            }
+            .categories-section {
+                width: 100%;
+                height: auto;
+            }
+            .category-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+            .weather-section {
+                justify-content: center;
+                padding-top: 3rem;
+            }
+            .weather-location {
+                position: static;
+                margin-bottom: 0.5rem;
+                justify-content: center;
+            }
+            .greeting-message {
+                position: static;
+                text-align: center;
+                margin-top: 1rem;
+                justify-content: center; /* Center items for mobile */
+            }
+            .anime-list-container {
+                padding-bottom: 1rem; /* More space for scrollbar on mobile */
+            }
+            .anime-card {
+                width: 110px; /* Slightly smaller cards on mobile */
+            }
+            .anime-card img {
+                width: 90px; /* Adjusted width for covers on mobile */
+                height: 126px; /* Adjusted height for covers on mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section text-left">
+            <div id="currentTime" class="time-date">
+                </div>
+            <div id="currentDate" class="date">
+                </div>
+        </div>
+
+        <div id="greetingMessage" class="greeting-message">
+            <span></span><!-- Greeting message will be inserted here by JS -->
+        </div>
+
+        <div class="main-content flex flex-col md:flex-row gap-8 w-full">
+            <div class="image-section flex-shrink-0">
+                <img id="mainImage"
+                     alt="Main Dashboard Image"
+                     class="w-64 h-64 md:w-80 md:h-80 object-cover aspect-square rounded-xl shadow-md"
+                     onerror="this.onerror=null;this.src='https://placehold.co/320x320/333333/6B7280?text=Image+Not+Found';">
+            </div>
+
+            <div class="categories-section flex-grow">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 category-grid">
+                    <div class="category-box">
+                        <div class="category-title">Entertainment</div>
+                        <ul id="entertainmentLinks" class="space-y-1 flex-grow">
+                            </ul>
+                    </div>
+
+                    <div class="category-box">
+                        <div class="category-title">Proactive</div>
+                        <ul id="proactiveLinks" class="space-y-1 flex-grow">
+                            </ul>
+                    </div>
+
+                    <div class="category-box">
+                        <div class="category-title">Miscellaneous</div>
+                        <ul id="miscellaneousLinks" class="space-y-1 flex-grow">
+                            </ul>
+                    </div>
+
+                    <div class="category-box">
+                        <div class="category-title">Utilities</div>
+                        <ul id="utilitiesLinks" class="space-y-1 flex-grow">
+                            </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-section w-full">
+            <form action="https://duckduckgo.com/" method="GET" class="w-full">
+                <input type="text" name="q" placeholder="Begin typing..." class="search-input" autofocus>
+            </form>
+        </div>
+
+        <!-- How to change the location of this weather section: -->
+        <!-- To move this entire weather section, simply cut this entire <div> block -->
+        <!-- and paste it where you want it to appear within the .container div. -->
+        <!-- For example, to move it above the search bar, paste it before the .search-section div. -->
+        <!-- To place it below the anime section, paste it after the .anime-releases-section div. -->
+        <!-- Adjusting its position relative to other elements might require minor CSS tweaks -->
+        <!-- if you're aiming for a complex grid or flex layout. -->
+        <div class="weather-section">
+            <div class="weather-location">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                <span>Washington, D.C.</span>
+            </div>
+
+            <div id="weatherForecast" class="weather-forecast-days">
+                </div>
+        </div>
+
+        <div class="anime-releases-section">
+            <div id="animeReleasesTitle" class="anime-releases-title">Upcoming Anime Episodes</div>
+            <div id="animeListContainer" class="anime-list-container">
+                </div>
+        </div>
+
+        </div>
+
+    <script>
+        // List of image URLs for the main image
+        const imageList = [
+            "https://w.wallhaven.cc/full/je/wallhaven-je52jp.jpg", // Example 1 (COTN)
+            "https://w.wallhaven.cc/full/7j/wallhaven-7j3yeo.jpg", // Example 2 (MDUD)
+            "https://w.wallhaven.cc/full/k7/wallhaven-k76wg6.png", // Example 3 (LAIN) - UPDATED
+            "https://w.wallhaven.cc/full/o5/wallhaven-o5oxvl.jpg", // Example 4 (ZZZ)
+            "https://w.wallhaven.cc/full/7p/wallhaven-7p8qg9.png",  // Example 5 (JINX)
+            "https://w.wallhaven.cc/full/9d/wallhaven-9d3181.jpg", // (SNOW) - ADDED
+            "https://w.wallhaven.cc/full/5g/wallhaven-5g96j3.jpg", // (FILIAN) - ADDED
+            "https://w.wallhaven.cc/full/k8/wallhaven-k83or7.jpg", // (GIRL) - ADDED
+            "https://w.wallhaven.cc/full/o5/wallhaven-o5ve6l.png", // (AD) - ADDED
+            "https://w.wallhaven.cc/full/6d/wallhaven-6do1vw.jpg", // (BTR) - ADDED
+            "https://w.wallhaven.cc/full/13/wallhaven-13l2r9.jpg", // (DS) - ADDED
+            "https://w.wallhaven.cc/full/9d/wallhaven-9dq9wk.png",  // (ZZZ2) - ADDED
+            "https://w.wallhaven.cc/full/9o/wallhaven-9o63kx.jpg", // (FRIDGE) - ADDED
+            "https://w.wallhaven.cc/full/1p/wallhaven-1p5g5w.png"  // (MOMO) - ADDED
+
+            // Add more image URLs here
+        ];
+
+        // Global variable to hold the shuffled list of images
+        let shuffledImageList = [];
+
+        // Fisher-Yates (Knuth) Shuffle algorithm
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+            return array;
+        }
+
+        // --- Image Change Logic ---
+        function setMainImage() {
+            const mainImageElement = document.getElementById('mainImage');
+
+            // If the shuffled list is empty, regenerate and shuffle it
+            if (shuffledImageList.length === 0) {
+                shuffledImageList = shuffleArray([...imageList]); // Create a shuffled copy of the original list
+            }
+
+            // Get the next image from the shuffled list (and remove it)
+            const imageUrlToSet = shuffledImageList.shift();
+
+            mainImageElement.src = imageUrlToSet;
+
+            // Update background image using CSS custom property
+            document.documentElement.style.setProperty('--dynamic-background-image', `url('${imageUrlToSet}')`);
+        }
+
+
+        // --- Link Data (SUPER easy to add new links) ---
+        const categoryLinks = {
+            entertainment: [
+                // Removed Jellyfin as requested
+                { name: 'youtube', url: 'https://www.youtube.com/' },
+                { name: 'spotify', url: 'https://open.spotify.com/' },
+                { name: 'hianime', url: 'https://hianime.to/home' }
+            ],
+            proactive: [
+                { name: 'github', url: 'https://github.com/' }, // Changed to base github.com as requested
+                { name: 'gmail', url: 'https://mail.google.com/mail/u/0/#inbox' },
+                // Removed Blazernet as requested
+                { name: 'outlook', url: 'https://outlook.live.com/' }
+            ],
+            miscellaneous: [
+                // Removed MAL as requested
+                { name: 'wallhaven', url: 'https://wallhaven.cc/' }
+            ],
+            utilities: [
+                // Removed local as requested
+                { name: 'gemini', url: 'https://gemini.google.com/' }
+            ]
+        };
+
+        // Function to render links
+        function renderLinks() {
+            // Clear all existing links before rendering new ones
+            document.getElementById('entertainmentLinks').innerHTML = '';
+            document.getElementById('proactiveLinks').innerHTML = '';
+            document.getElementById('miscellaneousLinks').innerHTML = '';
+            const utilitiesUl = document.getElementById('utilitiesLinks');
+            if (utilitiesUl) {
+                utilitiesUl.innerHTML = '';
+            }
+
+            for (const category in categoryLinks) {
+                const ulElement = document.getElementById(`${category}Links`);
+                if (ulElement) {
+                    categoryLinks[category].forEach(link => {
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.href = link.url;
+                        a.textContent = `~/.${link.name}`; // Removed whitespace here
+                        a.classList.add('link-item');
+                        li.appendChild(a);
+                        ulElement.appendChild(li);
+                    });
+                }
+            }
+        }
+
+        // Function to get greeting message based on time of day
+        function getGreetingMessage(name) {
+            const hour = new Date().getHours();
+            if (hour >= 0 && hour < 5) {
+                return `Still up, ${name}? Good early morning!`;
+            } else if (hour >= 5 && hour < 12) {
+                return `Good morning, ${name}!`;
+            } else if (hour >= 12 && hour < 13) {
+                return `Happy Noon, ${name}!`;
+            } else if (hour >= 13 && hour < 17) {
+                return `Good afternoon, ${name}!`;
+            } else {
+                return `Good night, ${name}!`;
+            }
+        }
+
+        // Function to update time, date, and greeting
+        function updateTimeDateAndGreeting() {
+            updateTimeAndDate(); // Update time and date
+            // Update greeting message, inserting it into the span element
+            // Changed 'Ryan' to 'USER' as requested
+            document.querySelector('#greetingMessage span').textContent = getGreetingMessage('USER');
+        }
+
+        // Function to update time and date (kept separate for clarity, but now called by combined function)
+        function updateTimeAndDate() {
+            const now = new Date();
+
+            // Time formatting to include seconds
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0'); // Get seconds
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // The hour '0' should be '12'
+            const timeString = `${hours}:${minutes}:${seconds}`; // Include seconds
+            document.getElementById('currentTime').innerHTML = `${timeString} <span class="time-am-pm">${ampm}</span>`;
+
+            // Date formatting
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = now.toLocaleDateString('en-US', options);
+            document.getElementById('currentDate').textContent = dateString;
+        }
+
+        // Function to get current anime season name
+        function getCurrentAnimeSeason() {
+            const month = new Date().getMonth(); // 0-11
+            const year = new Date().getFullYear();
+            let season = '';
+            if (month >= 0 && month <= 2) { // Jan, Feb, Mar
+                season = 'Winter';
+            } else if (month >= 3 && month <= 5) { // Apr, May, Jun
+                season = 'Spring';
+            } else if (month >= 6 && month <= 8) { // Jul, Aug, Sep
+                season = 'Summer';
+            } else { // Oct, Nov, Dec
+                season = 'Fall';
+            }
+            return `${season} ${year}`;
+        }
+
+        // --- Weather API Integration (Open-Meteo.com - No API Key Needed) ---
+        // Latitude and Longitude for Washington, D.C.
+        const WEATHER_LAT = 38.9072;
+        const WEATHER_LON = -77.0369;
+        // Open-Meteo API URL for daily forecast including max/min temp, precipitation probability, and weather code
+        const WEATHER_API_URL = `https://api.open-meteo.com/v1/forecast?latitude=${WEATHER_LAT}&longitude=${WEATHER_LON}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode&timezone=auto&forecast_days=5&temperature_unit=fahrenheit`;
+
+        // Function to get weather icon emoji or SVG based on Open-Meteo weather code
+        function getWeatherIconHtml(weatherCode, pop) {
+            // WMO Weather interpretation codes (https://www.nodc.noaa.gov/archive/arc0021/0002199/1.1/data/0-data/HTML/WMO-CODE/WMO4677.HTM)
+            switch (weatherCode) {
+                case 0: // Clear sky
+                case 1: // Mainly clear
+                case 2: // Partly cloudy
+                    return pop > 0.2 ? '🌤️' : '☀️'; // Sun emoji
+                case 3: return '☁️'; // Overcast
+                case 45: // Fog
+                case 48: return '🌫️'; // Depositing rime fog
+                case 51: // Drizzle: Light
+                case 53: // Drizzle: Moderate
+                case 55: return '🌧️'; // Drizzle: Dense intensity
+                case 56: // Freezing Drizzle: Light
+                case 57: return '🌧️❄️'; // Freezing Drizzle: Dense intensity
+                case 61: // Rain: Slight
+                case 63: // Rain: Moderate
+                case 65: return '🌧️'; // Rain: Heavy intensity
+                case 66: // Freezing Rain: Light
+                case 67: return '🌧️❄️'; // Freezing Rain: Heavy intensity
+                case 71: // Snow fall: Slight
+                case 73: // Snow fall: Moderate
+                case 75: return '❄️'; // Snow fall: Heavy intensity
+                case 77: return '🌨️'; // Snow grains
+                case 80: // Rain showers: Slight
+                case 81: // Rain showers: Moderate
+                case 82: return '🌧️'; // Rain showers: Violent
+                case 85: // Snow showers: Slight
+                case 86: return '❄️'; // Snow showers: Heavy
+                case 95: // Thunderstorm: Slight or moderate
+                case 96: // Thunderstorm with slight hail
+                case 99: // Thunderstorm with heavy hail
+                    return '🌨️🌧️'; // White cloud and lightning emojis
+                default: return '❓'; // Unknown weather code
+            }
+        }
+
+        // Function to fetch and display weather data
+        async function fetchWeatherData() {
+            const weatherForecastElement = document.getElementById('weatherForecast');
+            weatherForecastElement.innerHTML = '<div class="text-center w-full text-gray-400">Loading weather...</div>'; // Loading indicator
+
+            try {
+                const response = await fetch(WEATHER_API_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                weatherForecastElement.innerHTML = ''; // Clear loading indicator
+
+                if (!data.daily || !data.daily.time || data.daily.time.length === 0) {
+                    weatherForecastElement.innerHTML = '<div class="text-center w-full text-red-400">No weather data available.</div>';
+                    return;
+                }
+
+                // Loop through the daily forecast data
+                for (let i = 0; i < data.daily.time.length; i++) {
+                    const date = new Date(data.daily.time[i]);
+                    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                    const maxTemp = Math.round(data.daily.temperature_2m_max[i]);
+                    const minTemp = Math.round(data.daily.temperature_2m_min[i]);
+                    const weatherCode = data.daily.weathercode[i];
+                    const pop = data.daily.precipitation_probability_max[i] / 100; // Convert percentage to 0-1 range
+
+                    const weatherDayDiv = document.createElement('div');
+                    weatherDayDiv.classList.add('weather-day');
+
+                    const iconDiv = document.createElement('div');
+                    const iconHtml = getWeatherIconHtml(weatherCode, pop);
+                    // Only add 'svg-icon' class if it's an SVG, not an emoji/unicode character
+                    if (iconHtml.startsWith('<svg')) {
+                        iconDiv.classList.add('svg-icon');
+                        iconDiv.innerHTML = iconHtml;
+                    } else {
+                        iconDiv.textContent = iconHtml;
+                    }
+                    iconDiv.classList.add('weather-icon');
+                    weatherDayDiv.appendChild(iconDiv);
+
+                    const dayNameDiv = document.createElement('div');
+                    dayNameDiv.classList.add('weather-day-name');
+                    dayNameDiv.textContent = dayName;
+                    weatherDayDiv.appendChild(dayNameDiv);
+
+                    const tempDiv = document.createElement('div');
+                    tempDiv.classList.add('weather-temp');
+                    tempDiv.textContent = `${maxTemp}°/${minTemp}°`;
+                    weatherDayDiv.appendChild(tempDiv);
+
+                    const rainDiv = document.createElement('div');
+                    rainDiv.classList.add('weather-rain');
+                    rainDiv.textContent = `${Math.round(pop * 100)}% Rain`;
+                    weatherDayDiv.appendChild(rainDiv);
+
+                    weatherForecastElement.appendChild(weatherDayDiv);
+                }
+
+            } catch (error) {
+                console.error('Error fetching weather data:', error);
+                weatherForecastElement.innerHTML = '<div class="text-center w-full text-red-400">Failed to load weather data. Please try again later.</div>';
+            }
+        }
+
+        // --- Anime Releases API Integration (Jikan API) ---
+        const ANIME_API_URL = 'https://api.jikan.moe/v4/seasons/now'; // Endpoint for current season anime
+
+        async function fetchAnimeReleases() {
+            const animeListContainer = document.getElementById('animeListContainer');
+            const animeReleasesTitle = document.getElementById('animeReleasesTitle');
+            animeListContainer.innerHTML = '<div class="text-center w-full text-gray-400">Loading anime releases...</div>';
+            animeReleasesTitle.textContent = `Upcoming Anime Episodes - ${getCurrentAnimeSeason()}`; // Set season in title
+
+            try {
+                const response = await fetch(ANIME_API_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                animeListContainer.innerHTML = ''; // Clear loading indicator
+
+                if (!data.data || data.data.length === 0) {
+                    animeListContainer.innerHTML = '<div class="text-center w-full text-gray-400">No anime releases found for this season.</div>';
+                    return;
+                }
+
+                const seenAnimeIds = new Set();
+                const uniqueAiringAnime = [];
+
+                // Filter for TV series that are currently airing and deduplicate
+                data.data.forEach(anime => {
+                    if (anime.type === 'TV' && anime.status === 'Currently Airing' && !seenAnimeIds.has(anime.mal_id)) {
+                        uniqueAiringAnime.push(anime);
+                        seenAnimeIds.add(anime.mal_id);
+                    }
+                });
+
+                // Sort by members (popularity) in descending order
+                uniqueAiringAnime.sort((a, b) => (b.members || 0) - (a.members || 0));
+
+                if (uniqueAiringAnime.length === 0) {
+                     animeListContainer.innerHTML = '<div class="text-center w-full text-gray-400">No currently airing TV anime found for this season.</div>';
+                     return;
+                }
+
+                uniqueAiringAnime.forEach(anime => {
+                    const animeCard = document.createElement('div');
+                    animeCard.classList.add('anime-card');
+
+                    // Create an anchor tag to make the image clickable
+                    const animeLink = document.createElement('a');
+                    animeLink.href = anime.url; // Jikan API provides the MAL URL
+                    animeLink.target = "_blank"; // Open in a new tab
+                    animeLink.rel = "noopener noreferrer"; // Security best practice for target="_blank"
+
+                    const img = document.createElement('img');
+                    img.src = anime.images.jpg.image_url || 'https://placehold.co/100x140/333333/6B7280?text=No+Cover'; // Placeholder if no image
+                    img.alt = anime.title_english || anime.title;
+                    img.onerror = function() {
+                        this.onerror=null;
+                        this.src='https://placehold.co/100x140/333333/6B7280?text=No+Cover';
+                    };
+                    animeLink.appendChild(img); // Append image to the link
+                    animeCard.appendChild(animeLink); // Append link to the card
+
+                    const title = document.createElement('p');
+                    title.classList.add('anime-card-title');
+                    title.textContent = anime.title_english || anime.title; // Prefer English title if available
+                    animeCard.appendChild(title);
+
+                    // As discussed, the Jikan API's /seasons/now endpoint does not provide
+                    // next episode number or specific next episode release date.
+                    // Therefore, these details are intentionally omitted to prevent displaying incorrect information.
+
+                    animeListContainer.appendChild(animeCard);
+                });
+
+            } catch (error) {
+                console.error('Error fetching anime data:', error);
+                animeListContainer.innerHTML = '<div class="text-center w-full text-red-400">Failed to load anime releases. Please try again later.</div>';
+            }
+        }
+
+        // Call renderLinks, updateTimeDateAndGreeting, fetchWeatherData, fetchAnimeReleases on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            setMainImage(); // Set the main image on load
+            renderLinks();
+            updateTimeDateAndGreeting(); // Initial call for time, date, and greeting
+            setInterval(updateTimeDateAndGreeting, 1000); // Update every second for clock
+            fetchWeatherData(); // Initial weather fetch
+            setInterval(fetchWeatherData, 3600000); // Update weather every hour (3600000 ms)
+            fetchAnimeReleases(); // Initial anime fetch
+        });
+    </script>
+</body>
+</html>
