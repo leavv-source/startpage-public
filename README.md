@@ -1,7 +1,5 @@
 # Custom Startpage
 
----
-
 ## Sneak Peek
 
 ![Screenshot 2025-07-29 120718](https://github.com/leavv-source/startpage-public/blob/1d64172463d4042a48448dd11b1cf38d982db053/Screenshot%202025-07-29%20120718.png)
