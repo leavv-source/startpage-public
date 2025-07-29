@@ -1,10 +1,4 @@
-# My Custom Homepage Project
-
----
-
-## Welcome!
-
-Welcome to my custom homepage project! This is a simple, yet aesthetically pleasing HTML page designed to be set as your browser's homepage. It offers a quick overview of useful links, the current date/time, and upcoming anime episodes, providing a personalized and efficient start to your Browse sessions.
+# Custom Startpage
 
 ---
 
