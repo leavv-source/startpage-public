@@ -1,5 +1,5 @@
-#Welcome to my custom homepage project! This is a simple, yet aesthetically pleasing HTML page designed to be set as your browser's homepage, offering a quick overview of useful links, current date/time, and upcoming anime episodes.
-#Features
+Welcome to my custom homepage project! This is a simple, yet aesthetically pleasing HTML page designed to be set as your browser's homepage, offering a quick overview of useful links, current date/time, and upcoming anime episodes.
+Features
 
     Clean and Modern Design: A sleek interface with a focus on usability.
 
@@ -11,9 +11,11 @@
 
     Beginner-Friendly: Easy to install and modify, even if you're new to HTML.
 
-#Here's a sneak peek at what it looks like:
+Here's a sneak peek at what it looks like:
 
-#Installation
+![Alt text for the image]([image_url_or_path](https://github.com/leavv-source/startpage-public/blob/55d0c5cac5f547cdddc21c702fa52ab3871f1f58/Screenshot%202025-07-29%20120718.png))
+
+Installation
 
 Getting this custom homepage up and running is straightforward:
 
