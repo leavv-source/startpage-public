@@ -2,7 +2,7 @@
 
 ## Sneak Peek
 
-![Screenshot 2025-07-29 120718](https://github.com/leavv-source/startpage-public/blob/1d64172463d4042a48448dd11b1cf38d982db053/Screenshot%202025-07-29%20120718.png)
+![Screenshot 2025-07-29 120718]([https://github.com/leavv-source/startpage-public/blob/1d64172463d4042a48448dd11b1cf38d982db053/Screenshot%202025-07-29%20120718.png](https://github.com/leavv-source/startpage-public/blob/9679772369c4a1f883acb7cf113be9e97b90374f/preview2.png))
 
 ---
 
